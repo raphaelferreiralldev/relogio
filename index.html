@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Relógio</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #000;
+      color: #fff;
+      font-family: Georgia, serif;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+    }
+
+    #hora {
+      font-size: 22vw;
+      font-weight: bold;
+      letter-spacing: -2px;
+      line-height: 1;
+    }
+
+    #data {
+      font-size: 5vw;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      opacity: 0.75;
+    }
+  </style>
+</head>
+<body>
+  <div id="hora"></div>
+  <div id="data"></div>
+
+  <script>
+    const diasSemana = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+    const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+
+    function atualizar() {
+      const agora = new Date();
+
+      const h = String(agora.getHours()).padStart(2, '0');
+      const m = String(agora.getMinutes()).padStart(2, '0');
+      document.getElementById('hora').textContent = `${h}:${m}`;
+
+      const dia = diasSemana[agora.getDay()];
+      const num = agora.getDate();
+      const mes = meses[agora.getMonth()];
+      document.getElementById('data').textContent = `${dia}, ${num} ${mes}`;
+    }
+
+    atualizar();
+    setInterval(atualizar, 1000);
+  </script>
+</body>
+</html>
