@@ -12,8 +12,8 @@
     }
 
     body {
-      background: #000;
-      color: #fff;
+      background: #fff;
+      color: #000;
       font-family: Georgia, serif;
       height: 100vh;
       display: flex;
@@ -26,15 +26,13 @@
     #hora {
       font-size: 22vw;
       font-weight: bold;
-      letter-spacing: -2px;
       line-height: 1;
     }
 
     #data {
       font-size: 5vw;
-      letter-spacing: 3px;
+      letter-spacing: 2px;
       text-transform: uppercase;
-      opacity: 0.75;
     }
   </style>
 </head>
@@ -43,29 +41,21 @@
   <div id="data"></div>
 
   <script>
-    const FUSO = 'America/Sao_Paulo';
-
     const diasSemana = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
     const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
 
     function atualizar() {
-      const agora = new Date();
+      const utc = new Date().getTime();
+      const brasilia = new Date(utc - 3 * 60 * 60 * 1000);
 
-      const partes = new Intl.DateTimeFormat('pt-BR', {
-        timeZone: FUSO,
-        hour: '2-digit', minute: '2-digit',
-        weekday: 'long', day: 'numeric', month: 'short',
-        hour12: false
-      }).formatToParts(agora);
+      const h = String(brasilia.getUTCHours()).padStart(2, '0');
+      const m = String(brasilia.getUTCMinutes()).padStart(2, '0');
+      document.getElementById('hora').textContent = h + ':' + m;
 
-      const get = (tipo) => partes.find(p => p.type === tipo)?.value ?? '';
-
-      document.getElementById('hora').textContent = `${get('hour')}:${get('minute')}`;
-
-      const diaNome = get('weekday');
-      const num = get('day');
-      const mes = get('month').replace('.', '');
-      document.getElementById('data').textContent = `${diaNome}, ${num} ${mes}`;
+      const dia = diasSemana[brasilia.getUTCDay()];
+      const num = brasilia.getUTCDate();
+      const mes = meses[brasilia.getUTCMonth()];
+      document.getElementById('data').textContent = dia + ', ' + num + ' ' + mes;
     }
 
     atualizar();
