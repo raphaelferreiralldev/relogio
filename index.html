@@ -43,20 +43,29 @@
   <div id="data"></div>
 
   <script>
+    const FUSO = 'America/Sao_Paulo';
+
     const diasSemana = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
     const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
 
     function atualizar() {
       const agora = new Date();
 
-      const h = String(agora.getHours()).padStart(2, '0');
-      const m = String(agora.getMinutes()).padStart(2, '0');
-      document.getElementById('hora').textContent = `${h}:${m}`;
+      const partes = new Intl.DateTimeFormat('pt-BR', {
+        timeZone: FUSO,
+        hour: '2-digit', minute: '2-digit',
+        weekday: 'long', day: 'numeric', month: 'short',
+        hour12: false
+      }).formatToParts(agora);
 
-      const dia = diasSemana[agora.getDay()];
-      const num = agora.getDate();
-      const mes = meses[agora.getMonth()];
-      document.getElementById('data').textContent = `${dia}, ${num} ${mes}`;
+      const get = (tipo) => partes.find(p => p.type === tipo)?.value ?? '';
+
+      document.getElementById('hora').textContent = `${get('hour')}:${get('minute')}`;
+
+      const diaNome = get('weekday');
+      const num = get('day');
+      const mes = get('month').replace('.', '');
+      document.getElementById('data').textContent = `${diaNome}, ${num} ${mes}`;
     }
 
     atualizar();
